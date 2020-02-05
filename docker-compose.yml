@@ -1,0 +1,12 @@
+version: '3'
+services:
+  angularapp:
+    container_name: angularapphelloworld
+    image: angularapphelloworld
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always  
+    network_mode: host
+    ports:
+      - "4200:4200"
