@@ -1,19 +1,15 @@
-FROM node:12.14.1-alpine
-
-RUN mkdir -p /app
+FROM node:12-alpine as build
 
 WORKDIR /app
 
-COPY package*.json /app/
+COPY package*.json ./
+RUN npm install --silent
 
-RUN npm install -g @angular/cli
+COPY . .
+RUN npm run build -- --prod
 
-RUN npm install 
+FROM nginx:alpine as runtime
 
-COPY . /app/
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# RUN npm run build
-
-EXPOSE 4200
-
-CMD ["ng", "serve"]
+COPY --from=build /app/dist/ /usr/share/nginx/html/
